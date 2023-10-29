@@ -4,6 +4,7 @@ import axios from "axios";
 const Event = () => {
   const [events, setEvents] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchCriteria, setSearchCriteria] = useState("title");
   const [filteredEvents, setFilteredEvents] = useState(null);
 
   async function fetchData() {
@@ -26,16 +27,29 @@ const Event = () => {
     fetchData();
   }, []);
 
-  // Function to filter events by title
-  const filterByTitle = () => {
+  // Function to filter events based on selected search criteria
+  const filterEvents = () => {
     if (searchTerm.trim() === "") {
       // If the search term is empty, show all events
       setFilteredEvents(events);
     } else {
-      const filtered = events.filter(
-        (event) =>
-          event.title.value.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      let filtered;
+      if (searchCriteria === "title") {
+        filtered = events.filter(
+          (event) =>
+            event.title.value.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      } else if (searchCriteria === "description") {
+        filtered = events.filter(
+          (event) =>
+            event.description.value.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      } else if (searchCriteria === "capacity") {
+        filtered = events.filter(
+          (event) =>
+            event.capacity.value.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
       setFilteredEvents(filtered);
     }
   };
@@ -47,13 +61,23 @@ const Event = () => {
           <div className="card-body">
             <h4 className="card-title">Events</h4>
             <div className="search-bar">
+
+              <select
+                value={searchCriteria}
+                onChange={(e) => setSearchCriteria(e.target.value)}
+              >
+                <option value="title">Title</option>
+                <option value="description">Description</option>
+                <option value="capacity">Capacity</option>
+              </select>
               <input
                 type="text"
-                placeholder="Search events by title..."
+                placeholder={`Search events by ${searchCriteria}...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <button onClick={filterByTitle}>Search</button>
+
+              <button onClick={filterEvents}>Search</button>
             </div>
             <div className="table-responsive">
               <table className="table">
