@@ -9,7 +9,7 @@ const NavBar = () => {
 		<div>
 			<Navbar bg="dark" variant="dark">
 				<Container>
-					<Navbar.Brand href="#home">Electro SEBMAK</Navbar.Brand>
+					<Navbar.Brand href="#home">INCLUSIFY</Navbar.Brand>
 					<Nav className="me-auto">
 						<Nav.Link as={Link} to="/produits">
 							Produits
@@ -26,8 +26,8 @@ const NavBar = () => {
 						<Nav.Link as={Link} to="/clients">
 							Clients
 						</Nav.Link>
-						<Nav.Link as={Link} to="/national">
-							National
+						<Nav.Link as={Link} to="/event">
+							Events
 						</Nav.Link>
 						<Nav.Link as={Link} to="/International">
 							International

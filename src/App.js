@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import Froid from './views/Froid'
 import Produits from './views/Produits'
 import International from './views/International'
-import National from './views/National'
+import Event from './views/Event'
 import Boutiques from './views/Boutiques'
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
 				<Route path="/livraison" element={<Livraison />} />
 				<Route path="/clients" element={<Client />} />
 				<Route path="/International" element={<International />} />
-				<Route path="/national" element={<National />} />
+				<Route path="/event" element={<Event />} />
 				<Route path="/boutiques" element={<Boutiques />} />
 			</Routes>
 		</div>
