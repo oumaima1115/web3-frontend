@@ -4,6 +4,8 @@ import axios from "axios";
 const Event = () => {
   const [events, setEvents] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchCriteria, setSearchCriteria] = useState("title");
+  const [filteredEvents, setFilteredEvents] = useState(null);
 
   async function fetchData() {
     axios
@@ -17,6 +19,7 @@ const Event = () => {
           (item) => item.eventType.value === "Online Event"
         );
         setEvents(onlineEvents);
+        setFilteredEvents(onlineEvents); // Initially set filteredEvents to all events
       });
   }
 
@@ -24,16 +27,32 @@ const Event = () => {
     fetchData();
   }, []);
 
-  const filteredEvents = events
-    ? events.filter(
-        (event) =>
-          event.title.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          event.description.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          event.date.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          event.address.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          event.capacity.value.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+  // Function to filter events based on selected search criteria
+  const filterEvents = () => {
+    if (searchTerm.trim() === "") {
+      // If the search term is empty, show all events
+      setFilteredEvents(events);
+    } else {
+      let filtered;
+      if (searchCriteria === "title") {
+        filtered = events.filter(
+          (event) =>
+            event.title.value.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      } else if (searchCriteria === "description") {
+        filtered = events.filter(
+          (event) =>
+            event.description.value.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      } else if (searchCriteria === "capacity") {
+        filtered = events.filter(
+          (event) =>
+            event.capacity.value.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+      setFilteredEvents(filtered);
+    }
+  };
 
   return (
     <div>
@@ -42,12 +61,23 @@ const Event = () => {
           <div className="card-body">
             <h4 className="card-title">Events</h4>
             <div className="search-bar">
+
+              <select
+                value={searchCriteria}
+                onChange={(e) => setSearchCriteria(e.target.value)}
+              >
+                <option value="title">Title</option>
+                <option value="description">Description</option>
+                <option value="capacity">Capacity</option>
+              </select>
               <input
                 type="text"
-                placeholder="Search events..."
+                placeholder={`Search events by ${searchCriteria}...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
+
+              <button onClick={filterEvents}>Search</button>
             </div>
             <div className="table-responsive">
               <table className="table">
@@ -61,15 +91,16 @@ const Event = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredEvents.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.title.value}</td>
-                      <td>{item.description.value}</td>
-                      <td>{item.date.value}</td>
-                      <td>{item.address.value}</td>
-                      <td>{item.capacity.value}</td>
-                    </tr>
-                  ))}
+                  {filteredEvents &&
+                    filteredEvents.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.title.value}</td>
+                        <td>{item.description.value}</td>
+                        <td>{item.date.value}</td>
+                        <td>{item.address.value}</td>
+                        <td>{item.capacity.value}</td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
