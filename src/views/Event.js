@@ -4,6 +4,7 @@ import axios from "axios";
 const Event = () => {
   const [events, setEvents] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredEvents, setFilteredEvents] = useState(null);
 
   async function fetchData() {
     axios
@@ -17,6 +18,7 @@ const Event = () => {
           (item) => item.eventType.value === "Online Event"
         );
         setEvents(onlineEvents);
+        setFilteredEvents(onlineEvents); // Initially set filteredEvents to all events
       });
   }
 
@@ -24,16 +26,19 @@ const Event = () => {
     fetchData();
   }, []);
 
-  const filteredEvents = events
-    ? events.filter(
+  // Function to filter events by title
+  const filterByTitle = () => {
+    if (searchTerm.trim() === "") {
+      // If the search term is empty, show all events
+      setFilteredEvents(events);
+    } else {
+      const filtered = events.filter(
         (event) =>
-          event.title.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          event.description.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          event.date.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          event.address.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          event.capacity.value.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+          event.title.value.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredEvents(filtered);
+    }
+  };
 
   return (
     <div>
@@ -44,10 +49,11 @@ const Event = () => {
             <div className="search-bar">
               <input
                 type="text"
-                placeholder="Search events..."
+                placeholder="Search events by title..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
+              <button onClick={filterByTitle}>Search</button>
             </div>
             <div className="table-responsive">
               <table className="table">
@@ -61,15 +67,16 @@ const Event = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredEvents.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.title.value}</td>
-                      <td>{item.description.value}</td>
-                      <td>{item.date.value}</td>
-                      <td>{item.address.value}</td>
-                      <td>{item.capacity.value}</td>
-                    </tr>
-                  ))}
+                  {filteredEvents &&
+                    filteredEvents.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.title.value}</td>
+                        <td>{item.description.value}</td>
+                        <td>{item.date.value}</td>
+                        <td>{item.address.value}</td>
+                        <td>{item.capacity.value}</td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
