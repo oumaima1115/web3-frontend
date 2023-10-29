@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+
+.truncate-text {
+  max-width: 150px; /* Set your desired maximum width */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,219 +1,70 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import axios from "axios";
-const Chaud = () => {
-    const [Chaud, setChaud] = useState(null);
-    const [Froid, setFroid] = useState(null);
-    const [Cuisson, setCuisson] = useState(null);
-    const [SoinMaison, setSoinMaison] = useState(null);
+const Produits = () => {
+    const [Produits, setProduits] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
+    const fetchData = async (searchTerm = "") => {
+        let apiUrl = "http://localhost:8095/product";
+        if (searchTerm) {
+            apiUrl = `http://localhost:8095/productsearch?productName=${searchTerm}`;
+        }
 
-    async function fetchData() {
-        console.log("aaaaaaa");
-
-        axios
-            .get(`http://localhost:8095/post`, {
-                headers: { "Access-Control-Allow-Origin": "*" },
-            })
-            .then((res) => {
-                console.log(res.data.results.bindings);
-                setChaud(res.data.results.bindings);
+        try {
+            const response = await axios.get(apiUrl, {
+                headers: { "Access-Control-Allow-Origin": "*" }
             });
-
-
-        axios
-            .get(`http://localhost:8095/froid`, {
-                headers: { "Access-Control-Allow-Origin": "*" },
-            })
-            .then((res) => {
-                console.log(res.data.results.bindings);
-                setFroid(res.data.results.bindings);
-            });
-
-
-        axios
-            .get(`http://localhost:8095/cuisson`, {
-                headers: { "Access-Control-Allow-Origin": "*" },
-            })
-            .then((res) => {
-                console.log(res.data.results.bindings);
-                setCuisson(res.data.results.bindings);
-            });
-
-        axios
-            .get(`http://localhost:8095/soinmaison`, {
-                headers: { "Access-Control-Allow-Origin": "*" },
-            })
-            .then((res) => {
-                console.log(res.data.results.bindings);
-                setSoinMaison(res.data.results.bindings);
-            });
-
-
-    }
+            setProduits(response.data.results.bindings);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            // Handle error state here
+        }
+    };
 
     useEffect(() => {
-        fetchData();
-
-    }, []);
-
-
-
-
-
-
+        fetchData(searchTerm);
+    }, [searchTerm]);
 
     return (
         <div>
-            <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Chaud</h4>
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
+            <div className="card">
+                <div className="card-body">
+                    <h4 className="card-title">Produits</h4>
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Search by Product Name"
+                    />
+                    <div className="table-responsive">
+                        <table className="table">
+                            <thead>
                                 <tr>
-                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
                                     <th>Description</th>
-
+                                    <th>Category</th>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                {Chaud?.map((item, index) => (
+                            </thead>
+                            <tbody>
+                                {Produits?.map((item, index) => (
                                     <tr key={index}>
-                                        <td>{item.date.value}</td>
-                                        <td>{item.description.value}</td>
-
-
-
-
-
-
-                                    </tr>
-
-
-
-                                ))}
-                                </tbody>
-
-                            </table>
-
-
-                        </div>
-                    </div>
-                </div>
-                <div className="card">
-                    <div className="card-body">
-                        <h4 className="card-title">Froid</h4>
-                        <div className="table-responsive">
-                            <table className="table">
-                                <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Price</th>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {Froid?.map((item) => (
-                                    <tr>
-                                        <td>{item.idProduct.value}</td>
                                         <td>{item.name.value}</td>
-                                        <td>{item.description.value}</td>
                                         <td>{item.price.value}</td>
-
-
+                                        <td>{item.quantity.value}</td>
+                                        <td className="truncate-text">{item.description.value}</td>
+                                        <td>{item.type.value}</td>
                                     </tr>
-
-
                                 ))}
-                                </tbody>
-
-                            </table>
-
-
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div className="card">
-                    <div className="card-body">
-                        <h4 className="card-title">Soin Maison</h4>
-                        <div className="table-responsive">
-                            <table className="table">
-                                <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Price</th>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {SoinMaison?.map((item) => (
-                                    <tr>
-                                        <td>{item.idProduct.value}</td>
-                                        <td>{item.name.value}</td>
-                                        <td>{item.description.value}</td>
-                                        <td>{item.price.value}</td>
-
-
-                                    </tr>
-
-
-                                ))}
-                                </tbody>
-
-                            </table>
-
-
-                        </div>
-                    </div>
-                </div>
-                <div className="card">
-                    <div className="card-body">
-                        <h4 className="card-title">Cuisson</h4>
-                        <div className="table-responsive">
-                            <table className="table">
-                                <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Price</th>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {Cuisson?.map((item) => (
-                                    <tr>
-                                        <td>{item.idProduct.value}</td>
-                                        <td>{item.name.value}</td>
-                                        <td>{item.description.value}</td>
-                                        <td>{item.price.value}</td>
-
-
-                                    </tr>
-
-
-                                ))}
-                                </tbody>
-
-                            </table>
-
-
-                        </div>
-                    </div>
-                </div>
-
-
             </div>
-
         </div>
-
     )
 }
 
-export default Chaud;
+export default Produits;

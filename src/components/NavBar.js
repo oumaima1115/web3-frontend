@@ -9,7 +9,7 @@ const NavBar = () => {
 		<div>
 			<Navbar bg="dark" variant="dark">
 				<Container>
-					<Navbar.Brand href="#home">Electro SEBMAK</Navbar.Brand>
+					<Navbar.Brand href="#home">Inclusify</Navbar.Brand>
 					<Nav className="me-auto">
 						<Nav.Link as={Link} to="/produits">
 							Produits
@@ -38,7 +38,6 @@ const NavBar = () => {
 					</Nav>
 				</Container>
 			</Navbar>
-			<br />
 		</div>
 	)
 }
