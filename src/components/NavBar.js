@@ -11,8 +11,8 @@ const NavBar = () => {
 				<Container>
 					<Navbar.Brand href="#home">INCLUSIFY</Navbar.Brand>
 					<Nav className="me-auto">
-						<Nav.Link as={Link} to="/produits">
-							Produits
+					<Nav.Link as={Link} to="/produits">
+							Products
 						</Nav.Link>
 						<Nav.Link as={Link} to="/chaud">
 							Chaud
